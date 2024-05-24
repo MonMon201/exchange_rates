@@ -1,0 +1,33 @@
+plugins {
+    id 'java'
+    id 'war'
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    testImplementation 'junit:junit:4.13.2'
+    compileOnly 'org.projectlombok:lombok:1.18.20'
+    providedCompile 'javax:javaee-api:8.0.1'
+    annotationProcessor 'org.projectlombok:lombok:1.18.20'
+
+    implementation 'org.apache.logging.log4j:log4j-api:2.14.1'
+    implementation 'org.apache.logging.log4j:log4j-core:2.14.1'
+    implementation 'org.apache.logging.log4j:log4j-web:2.14.1'
+    implementation 'org.apache.taglibs:taglibs-standard-impl:1.2.5'
+    implementation 'org.apache.taglibs:taglibs-standard-spec:1.2.5'
+}
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(11)
+    }
+}
+
+war {
+    from 'src/main/webapp'
+    webXml = file('src/main/webapp/WEB-INF/web.xml')
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+}
