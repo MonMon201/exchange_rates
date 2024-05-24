@@ -26,8 +26,10 @@
             <td>
                 <form action="${pageContext.request.contextPath}/admin/manage-rates" method="post">
                     <input type="hidden" name="_method" value="put">
-                    <input type="hidden" name="currency" value="${rate.targetCurrency}">
-                    <input type="hidden" name="date" value="${rate.date}">
+                    <input type="hidden" name="oldCurrency" value="${rate.targetCurrency}">
+                    <input type="hidden" name="oldDate" value="${rate.date}">
+                    <input type="text" name="currency" value="${rate.targetCurrency}">
+                    <input type="text" name="date" value="${rate.date}">
                     <input type="text" name="buyingRate" value="${rate.buyingRate}">
                     <input type="text" name="sellingRate" value="${rate.sellingRate}">
                     <button type="submit">Update</button>

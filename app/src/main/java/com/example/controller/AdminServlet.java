@@ -51,12 +51,15 @@ public class AdminServlet extends HttpServlet {
     }
 
     private void updateExchangeRate(HttpServletRequest request) {
-        String currency = request.getParameter("currency");
-        String date = request.getParameter("date");
+        String oldCurrency = request.getParameter("oldCurrency");
+        String oldDate = request.getParameter("oldDate");
+        String newCurrency = request.getParameter("currency");
+        String newDate = request.getParameter("date");
         double buyingRate = Double.parseDouble(request.getParameter("buyingRate"));
         double sellingRate = Double.parseDouble(request.getParameter("sellingRate"));
 
-        exchangeRateDAO.updateExchangeRate(new ExchangeRate(currency, date, buyingRate, sellingRate));
+        exchangeRateDAO.deleteExchangeRate(oldCurrency, oldDate); // Remove old entry
+        exchangeRateDAO.addExchangeRate(new ExchangeRate(newCurrency, newDate, buyingRate, sellingRate)); // Add updated entry
     }
 
     private void deleteExchangeRate(HttpServletRequest request) {
