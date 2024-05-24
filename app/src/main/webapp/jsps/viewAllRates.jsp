@@ -24,6 +24,32 @@
                 }
             }
         }
+
+        window.onload = function() {
+            var currencies = new Set();
+            var rows = document.getElementById("ratesTable").getElementsByTagName("tr");
+
+            for (var i = 1; i < rows.length; i++) { // Start at 1 to skip the header row
+                var cells = rows[i].getElementsByTagName("td");
+                var currency = cells[0].textContent;
+                currencies.add(currency);
+            }
+
+            var select = document.getElementById("currencySelect");
+            currencies.forEach(function(currency) {
+                var option = document.createElement("option");
+                option.value = currency;
+                option.textContent = currency;
+                select.appendChild(option);
+            });
+
+            // Set default date
+            document.getElementById("startDate").value = "2024-05-19";
+            document.getElementById("endDate").value = "2024-05-19";
+
+            // Filter the table with the default date
+            filterCurrency();
+        }
     </script>
 </head>
 <body>
@@ -32,9 +58,6 @@
 <label for="currencySelect">Select Currency:</label>
 <select id="currencySelect" onchange="filterCurrency()">
     <option value="All">All</option>
-    <c:forEach var="rate" items="${exchangeRates}">
-        <option value="${rate.targetCurrency}"><c:out value="${rate.targetCurrency}" /></option>
-    </c:forEach>
 </select>
 
 <br>
