@@ -28,7 +28,6 @@ public class AdminRatesServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         log.info("AdminRatesServlet doGet");
         List<ExchangeRateEntity> exchangeRates = exchangeRateRepository.getAllExchangeRates();
-        log.info("exchangeRates size: " + exchangeRates.size());
         request.setAttribute("exchangeRates", exchangeRates);
         request.getRequestDispatcher("/jsps/manageExchangeRates.jsp").forward(request, response);
     }
@@ -52,22 +51,22 @@ public class AdminRatesServlet extends HttpServlet {
         double buyingRate = Double.parseDouble(request.getParameter("buyingRate"));
         double sellingRate = Double.parseDouble(request.getParameter("sellingRate"));
 
-        exchangeRateRepository.addExchangeRate(new ExchangeRateEntity(new ExchangeRateEntity.ExchangeRateId(currency, date), buyingRate, sellingRate));
+        exchangeRateRepository.addExchangeRate(new ExchangeRateEntity(null, currency, date, buyingRate, sellingRate));
     }
 
     private void updateExchangeRate(HttpServletRequest request) {
+        Long id = Long.parseLong(request.getParameter("id"));
         String currency = request.getParameter("currency");
         String date = request.getParameter("date");
         double buyingRate = Double.parseDouble(request.getParameter("buyingRate"));
         double sellingRate = Double.parseDouble(request.getParameter("sellingRate"));
 
-        exchangeRateRepository.updateExchangeRate(new ExchangeRateEntity(new ExchangeRateEntity.ExchangeRateId(currency, date), buyingRate, sellingRate));
+        exchangeRateRepository.updateExchangeRate(new ExchangeRateEntity(id, currency, date, buyingRate, sellingRate));
     }
 
     private void deleteExchangeRate(HttpServletRequest request) {
-        String currency = request.getParameter("currency");
-        String date = request.getParameter("date");
+        Long id = Long.parseLong(request.getParameter("id"));
 
-        exchangeRateRepository.deleteExchangeRate(currency, date);
+        exchangeRateRepository.deleteExchangeRate(id);
     }
 }

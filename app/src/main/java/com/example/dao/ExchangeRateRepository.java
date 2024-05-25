@@ -5,44 +5,53 @@ import com.example.model.ExchangeRateEntity;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
-import javax.transaction.Transactional;
 import java.util.List;
 
 public class ExchangeRateRepository {
-    private EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory("my-persistence-unit");
+
+    private EntityManagerFactory entityManagerFactory;
+
+    public ExchangeRateRepository() {
+        this.entityManagerFactory = Persistence.createEntityManagerFactory("my-persistence-unit");
+    }
 
     public List<ExchangeRateEntity> getAllExchangeRates() {
-        EntityManager em = entityManagerFactory.createEntityManager();
-        return em.createQuery("SELECT e FROM ExchangeRateEntity e", ExchangeRateEntity.class).getResultList();
+        EntityManager entityManager = entityManagerFactory.createEntityManager();
+        List<ExchangeRateEntity> exchangeRates = entityManager.createQuery("SELECT e FROM ExchangeRateEntity e", ExchangeRateEntity.class).getResultList();
+        entityManager.close();
+        return exchangeRates;
     }
 
-    @Transactional
-    public void addExchangeRate(ExchangeRateEntity exchangeRateEntity) {
-        EntityManager em = entityManagerFactory.createEntityManager();
-        em.getTransaction().begin();
-        em.persist(exchangeRateEntity);
-        em.getTransaction().commit();
-        em.close();
+    public void addExchangeRate(ExchangeRateEntity exchangeRate) {
+        EntityManager entityManager = entityManagerFactory.createEntityManager();
+        entityManager.getTransaction().begin();
+        entityManager.persist(exchangeRate);
+        entityManager.getTransaction().commit();
+        entityManager.close();
     }
 
-    @Transactional
-    public void updateExchangeRate(ExchangeRateEntity exchangeRateEntity) {
-        EntityManager em = entityManagerFactory.createEntityManager();
-        em.getTransaction().begin();
-        em.merge(exchangeRateEntity);
-        em.getTransaction().commit();
-        em.close();
-    }
-
-    @Transactional
-    public void deleteExchangeRate(String currency, String date) {
-        EntityManager em = entityManagerFactory.createEntityManager();
-        em.getTransaction().begin();
-        ExchangeRateEntity exchangeRateEntity = em.find(ExchangeRateEntity.class, new ExchangeRateEntity.ExchangeRateId(currency, date));
-        if (exchangeRateEntity != null) {
-            em.remove(exchangeRateEntity);
+    public void updateExchangeRate(ExchangeRateEntity exchangeRate) {
+        EntityManager entityManager = entityManagerFactory.createEntityManager();
+        entityManager.getTransaction().begin();
+        ExchangeRateEntity existingRate = entityManager.find(ExchangeRateEntity.class, exchangeRate.getId());
+        if (existingRate != null) {
+            existingRate.setCurrency(exchangeRate.getCurrency());
+            existingRate.setDate(exchangeRate.getDate());
+            existingRate.setBuyingRate(exchangeRate.getBuyingRate());
+            existingRate.setSellingRate(exchangeRate.getSellingRate());
+            entityManager.getTransaction().commit();
         }
-        em.getTransaction().commit();
-        em.close();
+        entityManager.close();
+    }
+
+    public void deleteExchangeRate(Long id) {
+        EntityManager entityManager = entityManagerFactory.createEntityManager();
+        entityManager.getTransaction().begin();
+        ExchangeRateEntity exchangeRate = entityManager.find(ExchangeRateEntity.class, id);
+        if (exchangeRate != null) {
+            entityManager.remove(exchangeRate);
+            entityManager.getTransaction().commit();
+        }
+        entityManager.close();
     }
 }

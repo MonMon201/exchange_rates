@@ -79,7 +79,7 @@
     <tbody>
     <c:forEach var="rate" items="${exchangeRates}">
         <tr>
-            <td><c:out value="${rate.targetCurrency}" /></td>
+            <td><c:out value="${rate.currency}" /></td>
             <td><c:out value="${rate.date}" /></td>
             <td><c:out value="${rate.buyingRate}" /></td>
             <td><c:out value="${rate.sellingRate}" /></td>
@@ -87,5 +87,9 @@
     </c:forEach>
     </tbody>
 </table>
+
+<!-- Button to navigate to admin view -->
+<button onclick="location.href='${pageContext.request.contextPath}/admin/manage-new-rates'">Go to Admin View</button>
+
 </body>
 </html>
