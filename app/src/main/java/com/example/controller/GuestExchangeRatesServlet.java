@@ -1,10 +1,11 @@
 package com.example.controller;
 
-import com.example.repository.ExchangeRateRepository;
 import com.example.model.ExchangeRate;
+import com.example.service.ExchangeRateServiceBean;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import javax.inject.Inject;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -16,17 +17,13 @@ import java.util.List;
 @WebServlet("/guest/exchangeRates")
 public class GuestExchangeRatesServlet extends HttpServlet {
     private static final Logger logger = LogManager.getLogger(GuestExchangeRatesServlet.class);
-    private ExchangeRateRepository exchangeRateRepository;
 
-    @Override
-    public void init() throws ServletException {
-        super.init();
-        exchangeRateRepository = new ExchangeRateRepository();
-    }
+    @Inject
+    private ExchangeRateServiceBean exchangeRateService;
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        List<ExchangeRate> exchangeRates = exchangeRateRepository.getAllExchangeRates();
+        List<ExchangeRate> exchangeRates = exchangeRateService.getAllExchangeRates();
         logger.info("Exchange rates: {}", exchangeRates);
         request.setAttribute("exchangeRates", exchangeRates);
         request.getRequestDispatcher("/view/GuestExchangeRatesView.jsp").forward(request, response);
