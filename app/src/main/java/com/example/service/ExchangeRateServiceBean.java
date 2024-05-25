@@ -13,6 +13,10 @@ public class ExchangeRateServiceBean {
     @Inject
     private ExchangeRateRepository exchangeRateRepository;
 
+    public ExchangeRateServiceBean() {
+        this.exchangeRateRepository = new ExchangeRateRepository();
+    }
+
     public List<ExchangeRate> getAllExchangeRates() {
         return exchangeRateRepository.getAllExchangeRates();
     }
@@ -27,5 +31,13 @@ public class ExchangeRateServiceBean {
 
     public void deleteExchangeRate(Long id) {
         exchangeRateRepository.deleteExchangeRate(id);
+    }
+
+    public ExchangeRate findById(Long id) {
+        return exchangeRateRepository.findById(id);
+    }
+
+    public List<ExchangeRate> findByCurrency(String currency) {
+        return exchangeRateRepository.findByCurrency(currency);
     }
 }

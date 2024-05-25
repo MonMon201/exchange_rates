@@ -6,6 +6,14 @@
 </head>
 <body>
 <h1>Manage Exchange Rates</h1>
+
+<!-- Search Form -->
+<form action="${pageContext.request.contextPath}/admin/exchangeRates" method="get">
+    <label for="currencySearch">Search by Currency:</label>
+    <input type="text" id="currencySearch" name="currency" value="${param.currency}">
+    <button type="submit">Search</button>
+</form>
+
 <table border="1">
     <thead>
     <tr>

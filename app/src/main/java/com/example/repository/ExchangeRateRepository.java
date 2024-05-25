@@ -3,55 +3,51 @@ package com.example.repository;
 import com.example.model.ExchangeRate;
 
 import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
+import javax.persistence.TypedQuery;
 import java.util.List;
 
 public class ExchangeRateRepository {
 
-    private EntityManagerFactory entityManagerFactory;
+    private EntityManager entityManager;
 
     public ExchangeRateRepository() {
-        this.entityManagerFactory = Persistence.createEntityManagerFactory("my-persistence-unit");
+        entityManager = Persistence.createEntityManagerFactory("my-persistence-unit").createEntityManager();
     }
 
     public List<ExchangeRate> getAllExchangeRates() {
-        EntityManager entityManager = entityManagerFactory.createEntityManager();
-        List<ExchangeRate> exchangeRates = entityManager.createQuery("SELECT e FROM ExchangeRate e", ExchangeRate.class).getResultList();
-        entityManager.close();
-        return exchangeRates;
+        TypedQuery<ExchangeRate> query = entityManager.createQuery("SELECT e FROM ExchangeRate e", ExchangeRate.class);
+        return query.getResultList();
     }
 
     public void addExchangeRate(ExchangeRate exchangeRate) {
-        EntityManager entityManager = entityManagerFactory.createEntityManager();
         entityManager.getTransaction().begin();
         entityManager.persist(exchangeRate);
         entityManager.getTransaction().commit();
-        entityManager.close();
     }
 
     public void updateExchangeRate(ExchangeRate exchangeRate) {
-        EntityManager entityManager = entityManagerFactory.createEntityManager();
         entityManager.getTransaction().begin();
-        ExchangeRate existingRate = entityManager.find(ExchangeRate.class, exchangeRate.getId());
-        if (existingRate != null) {
-            existingRate.setCurrency(exchangeRate.getCurrency());
-            existingRate.setDate(exchangeRate.getDate());
-            existingRate.setBuyingRate(exchangeRate.getBuyingRate());
-            existingRate.setSellingRate(exchangeRate.getSellingRate());
-            entityManager.getTransaction().commit();
-        }
-        entityManager.close();
+        entityManager.merge(exchangeRate);
+        entityManager.getTransaction().commit();
     }
 
     public void deleteExchangeRate(Long id) {
-        EntityManager entityManager = entityManagerFactory.createEntityManager();
         entityManager.getTransaction().begin();
         ExchangeRate exchangeRate = entityManager.find(ExchangeRate.class, id);
         if (exchangeRate != null) {
             entityManager.remove(exchangeRate);
-            entityManager.getTransaction().commit();
         }
-        entityManager.close();
+        entityManager.getTransaction().commit();
+    }
+
+    public ExchangeRate findById(Long id) {
+        return entityManager.find(ExchangeRate.class, id);
+    }
+
+    public List<ExchangeRate> findByCurrency(String currency) {
+        TypedQuery<ExchangeRate> query = entityManager.createQuery("SELECT e FROM ExchangeRate e WHERE e.currency = :currency", ExchangeRate.class);
+        query.setParameter("currency", currency);
+        return query.getResultList();
     }
 }

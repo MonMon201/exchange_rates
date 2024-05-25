@@ -23,8 +23,14 @@ public class AdminExchangeRatesServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        log.info("AdminRatesServlet doGet");
-        List<ExchangeRate> exchangeRates = exchangeRateService.getAllExchangeRates();
+        String currency = request.getParameter("currency");
+        List<ExchangeRate> exchangeRates;
+        if (currency != null && !currency.isEmpty()) {
+            exchangeRates = exchangeRateService.findByCurrency(currency);
+        } else {
+            exchangeRates = exchangeRateService.getAllExchangeRates();
+        }
+        log.info("Exchange rates: {}", exchangeRates);
         request.setAttribute("exchangeRates", exchangeRates);
         request.getRequestDispatcher("/view/AdminExchangeRatesView.jsp").forward(request, response);
     }
@@ -42,6 +48,18 @@ public class AdminExchangeRatesServlet extends HttpServlet {
         response.sendRedirect(request.getContextPath() + "/admin/exchangeRates");
     }
 
+    @Override
+    protected void doPut(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        updateExchangeRate(request);
+        response.sendRedirect(request.getContextPath() + "/admin/exchangeRates");
+    }
+
+    @Override
+    protected void doDelete(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        deleteExchangeRate(request);
+        response.sendRedirect(request.getContextPath() + "/admin/exchangeRates");
+    }
+
     private void addExchangeRate(HttpServletRequest request) {
         String currency = request.getParameter("currency");
         String date = request.getParameter("date");
@@ -51,19 +69,28 @@ public class AdminExchangeRatesServlet extends HttpServlet {
         exchangeRateService.addExchangeRate(new ExchangeRate(null, currency, date, buyingRate, sellingRate));
     }
 
-    private void updateExchangeRate(HttpServletRequest request) {
-        Long id = Long.parseLong(request.getParameter("id"));
-        String currency = request.getParameter("currency");
-        String date = request.getParameter("date");
-        double buyingRate = Double.parseDouble(request.getParameter("buyingRate"));
-        double sellingRate = Double.parseDouble(request.getParameter("sellingRate"));
+    private void updateExchangeRate(HttpServletRequest request) throws ServletException {
+        try {
+            Long id = Long.parseLong(request.getParameter("id"));
+            String currency = request.getParameter("currency");
+            String date = request.getParameter("date");
+            double buyingRate = Double.parseDouble(request.getParameter("buyingRate"));
+            double sellingRate = Double.parseDouble(request.getParameter("sellingRate"));
 
-        exchangeRateService.updateExchangeRate(new ExchangeRate(id, currency, date, buyingRate, sellingRate));
+            exchangeRateService.updateExchangeRate(new ExchangeRate(id, currency, date, buyingRate, sellingRate));
+        } catch (NumberFormatException e) {
+            log.error("Invalid ID format", e);
+            throw new ServletException("Invalid ID format", e);
+        }
     }
 
-    private void deleteExchangeRate(HttpServletRequest request) {
-        Long id = Long.parseLong(request.getParameter("id"));
-
-        exchangeRateService.deleteExchangeRate(id);
+    private void deleteExchangeRate(HttpServletRequest request) throws ServletException {
+        try {
+            Long id = Long.parseLong(request.getParameter("id"));
+            exchangeRateService.deleteExchangeRate(id);
+        } catch (NumberFormatException e) {
+            log.error("Invalid ID format", e);
+            throw new ServletException("Invalid ID format", e);
+        }
     }
 }
