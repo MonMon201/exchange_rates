@@ -15,7 +15,7 @@ import javax.persistence.Table;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class ExchangeRateEntity {
+public class ExchangeRate {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

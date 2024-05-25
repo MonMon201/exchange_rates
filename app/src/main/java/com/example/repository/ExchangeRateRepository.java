@@ -1,6 +1,6 @@
-package com.example.dao;
+package com.example.repository;
 
-import com.example.model.ExchangeRateEntity;
+import com.example.model.ExchangeRate;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -15,14 +15,14 @@ public class ExchangeRateRepository {
         this.entityManagerFactory = Persistence.createEntityManagerFactory("my-persistence-unit");
     }
 
-    public List<ExchangeRateEntity> getAllExchangeRates() {
+    public List<ExchangeRate> getAllExchangeRates() {
         EntityManager entityManager = entityManagerFactory.createEntityManager();
-        List<ExchangeRateEntity> exchangeRates = entityManager.createQuery("SELECT e FROM ExchangeRateEntity e", ExchangeRateEntity.class).getResultList();
+        List<ExchangeRate> exchangeRates = entityManager.createQuery("SELECT e FROM ExchangeRate e", ExchangeRate.class).getResultList();
         entityManager.close();
         return exchangeRates;
     }
 
-    public void addExchangeRate(ExchangeRateEntity exchangeRate) {
+    public void addExchangeRate(ExchangeRate exchangeRate) {
         EntityManager entityManager = entityManagerFactory.createEntityManager();
         entityManager.getTransaction().begin();
         entityManager.persist(exchangeRate);
@@ -30,10 +30,10 @@ public class ExchangeRateRepository {
         entityManager.close();
     }
 
-    public void updateExchangeRate(ExchangeRateEntity exchangeRate) {
+    public void updateExchangeRate(ExchangeRate exchangeRate) {
         EntityManager entityManager = entityManagerFactory.createEntityManager();
         entityManager.getTransaction().begin();
-        ExchangeRateEntity existingRate = entityManager.find(ExchangeRateEntity.class, exchangeRate.getId());
+        ExchangeRate existingRate = entityManager.find(ExchangeRate.class, exchangeRate.getId());
         if (existingRate != null) {
             existingRate.setCurrency(exchangeRate.getCurrency());
             existingRate.setDate(exchangeRate.getDate());
@@ -47,7 +47,7 @@ public class ExchangeRateRepository {
     public void deleteExchangeRate(Long id) {
         EntityManager entityManager = entityManagerFactory.createEntityManager();
         entityManager.getTransaction().begin();
-        ExchangeRateEntity exchangeRate = entityManager.find(ExchangeRateEntity.class, id);
+        ExchangeRate exchangeRate = entityManager.find(ExchangeRate.class, id);
         if (exchangeRate != null) {
             entityManager.remove(exchangeRate);
             entityManager.getTransaction().commit();

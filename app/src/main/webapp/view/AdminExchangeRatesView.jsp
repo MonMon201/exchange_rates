@@ -26,7 +26,7 @@
             <td><c:out value="${rate.buyingRate}" /></td>
             <td><c:out value="${rate.sellingRate}" /></td>
             <td>
-                <form action="${pageContext.request.contextPath}/admin/manage-new-rates" method="post">
+                <form action="${pageContext.request.contextPath}/admin/exchangeRates" method="post">
                     <input type="hidden" name="_method" value="put">
                     <input type="hidden" name="id" value="${rate.id}">
                     <input type="text" name="currency" value="${rate.currency}">
@@ -35,7 +35,7 @@
                     <input type="text" name="sellingRate" value="${rate.sellingRate}">
                     <button type="submit">Update</button>
                 </form>
-                <form action="${pageContext.request.contextPath}/admin/manage-new-rates" method="post">
+                <form action="${pageContext.request.contextPath}/admin/exchangeRates" method="post">
                     <input type="hidden" name="_method" value="delete">
                     <input type="hidden" name="id" value="${rate.id}">
                     <button type="submit">Delete</button>
@@ -46,10 +46,10 @@
     </tbody>
 </table>
 
-<button onclick="location.href='${pageContext.request.contextPath}/view-all-rates'">Go to Guest View</button>
+<button onclick="location.href='${pageContext.request.contextPath}/guest/exchangeRates'">Go to Guest View</button>
 
 <h2>Add New Exchange Rate</h2>
-<form action="${pageContext.request.contextPath}/admin/manage-new-rates" method="post">
+<form action="${pageContext.request.contextPath}/admin/exchangeRates" method="post">
     <label for="currency">Currency:</label>
     <input type="text" id="currency" name="currency"><br>
     <label for="date">Date:</label>

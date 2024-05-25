@@ -89,7 +89,7 @@
 </table>
 
 <!-- Button to navigate to admin view -->
-<button onclick="location.href='${pageContext.request.contextPath}/admin/manage-new-rates'">Go to Admin View</button>
+<button onclick="location.href='${pageContext.request.contextPath}/admin/exchangeRates'">Go to Admin View</button>
 
 </body>
 </html>

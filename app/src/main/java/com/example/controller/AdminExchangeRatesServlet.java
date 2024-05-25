@@ -1,7 +1,7 @@
 package com.example.controller;
 
-import com.example.dao.ExchangeRateRepository;
-import com.example.model.ExchangeRateEntity;
+import com.example.repository.ExchangeRateRepository;
+import com.example.model.ExchangeRate;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -13,9 +13,9 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.List;
 
-@WebServlet("/admin/manage-new-rates")
-public class AdminRatesServlet extends HttpServlet {
-    private static final Logger log = LogManager.getLogger(AdminRatesServlet.class);
+@WebServlet("/admin/exchangeRates")
+public class AdminExchangeRatesServlet extends HttpServlet {
+    private static final Logger log = LogManager.getLogger(AdminExchangeRatesServlet.class);
     private ExchangeRateRepository exchangeRateRepository;
 
     @Override
@@ -27,9 +27,9 @@ public class AdminRatesServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         log.info("AdminRatesServlet doGet");
-        List<ExchangeRateEntity> exchangeRates = exchangeRateRepository.getAllExchangeRates();
+        List<ExchangeRate> exchangeRates = exchangeRateRepository.getAllExchangeRates();
         request.setAttribute("exchangeRates", exchangeRates);
-        request.getRequestDispatcher("/jsps/manageExchangeRates.jsp").forward(request, response);
+        request.getRequestDispatcher("/view/AdminExchangeRatesView.jsp").forward(request, response);
     }
 
     @Override
@@ -42,7 +42,7 @@ public class AdminRatesServlet extends HttpServlet {
         } else if (method.equalsIgnoreCase("DELETE")) {
             deleteExchangeRate(request);
         }
-        response.sendRedirect(request.getContextPath() + "/admin/manage-new-rates");
+        response.sendRedirect(request.getContextPath() + "/admin/exchangeRates");
     }
 
     private void addExchangeRate(HttpServletRequest request) {
@@ -51,7 +51,7 @@ public class AdminRatesServlet extends HttpServlet {
         double buyingRate = Double.parseDouble(request.getParameter("buyingRate"));
         double sellingRate = Double.parseDouble(request.getParameter("sellingRate"));
 
-        exchangeRateRepository.addExchangeRate(new ExchangeRateEntity(null, currency, date, buyingRate, sellingRate));
+        exchangeRateRepository.addExchangeRate(new ExchangeRate(null, currency, date, buyingRate, sellingRate));
     }
 
     private void updateExchangeRate(HttpServletRequest request) {
@@ -61,7 +61,7 @@ public class AdminRatesServlet extends HttpServlet {
         double buyingRate = Double.parseDouble(request.getParameter("buyingRate"));
         double sellingRate = Double.parseDouble(request.getParameter("sellingRate"));
 
-        exchangeRateRepository.updateExchangeRate(new ExchangeRateEntity(id, currency, date, buyingRate, sellingRate));
+        exchangeRateRepository.updateExchangeRate(new ExchangeRate(id, currency, date, buyingRate, sellingRate));
     }
 
     private void deleteExchangeRate(HttpServletRequest request) {

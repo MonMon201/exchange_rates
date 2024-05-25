@@ -1,7 +1,7 @@
 package com.example.controller;
 
-import com.example.dao.ExchangeRateRepository;
-import com.example.model.ExchangeRateEntity;
+import com.example.repository.ExchangeRateRepository;
+import com.example.model.ExchangeRate;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -13,9 +13,9 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.List;
 
-@WebServlet("/view-all-rates")
-public class ViewExchangeRatesServlet extends HttpServlet {
-    private static final Logger logger = LogManager.getLogger(ViewExchangeRatesServlet.class);
+@WebServlet("/guest/exchangeRates")
+public class GuestExchangeRatesServlet extends HttpServlet {
+    private static final Logger logger = LogManager.getLogger(GuestExchangeRatesServlet.class);
     private ExchangeRateRepository exchangeRateRepository;
 
     @Override
@@ -26,9 +26,9 @@ public class ViewExchangeRatesServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        List<ExchangeRateEntity> exchangeRates = exchangeRateRepository.getAllExchangeRates();
+        List<ExchangeRate> exchangeRates = exchangeRateRepository.getAllExchangeRates();
         logger.info("Exchange rates: {}", exchangeRates);
         request.setAttribute("exchangeRates", exchangeRates);
-        request.getRequestDispatcher("/jsps/viewAllRates.jsp").forward(request, response);
+        request.getRequestDispatcher("/view/GuestExchangeRatesView.jsp").forward(request, response);
     }
 }
