@@ -26,6 +26,7 @@ public class GuestExchangeRatesServlet extends HttpServlet {
         List<ExchangeRate> exchangeRates = exchangeRateService.getAllExchangeRates();
         logger.info("Exchange rates: {}", exchangeRates);
         request.setAttribute("exchangeRates", exchangeRates);
-        request.getRequestDispatcher("/view/GuestExchangeRatesView.jsp").forward(request, response);
+        request.setAttribute("role", "guest");
+        request.getRequestDispatcher("/view/ExchangeRates.jsp").forward(request, response);
     }
 }

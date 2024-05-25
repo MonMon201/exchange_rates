@@ -32,7 +32,8 @@ public class AdminExchangeRatesServlet extends HttpServlet {
         }
         log.info("Exchange rates: {}", exchangeRates);
         request.setAttribute("exchangeRates", exchangeRates);
-        request.getRequestDispatcher("/view/AdminExchangeRatesView.jsp").forward(request, response);
+        request.setAttribute("role", "admin");
+        request.getRequestDispatcher("/view/ExchangeRates.jsp").forward(request, response);
     }
 
     @Override
@@ -45,19 +46,19 @@ public class AdminExchangeRatesServlet extends HttpServlet {
         } else if (method.equalsIgnoreCase("DELETE")) {
             deleteExchangeRate(request);
         }
-        response.sendRedirect(request.getContextPath() + "/admin/exchangeRates");
+        response.sendRedirect(request.getContextPath() + "/admin/exchangeRates?role=admin");
     }
 
     @Override
     protected void doPut(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         updateExchangeRate(request);
-        response.sendRedirect(request.getContextPath() + "/admin/exchangeRates");
+        response.sendRedirect(request.getContextPath() + "/admin/exchangeRates?role=admin");
     }
 
     @Override
     protected void doDelete(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         deleteExchangeRate(request);
-        response.sendRedirect(request.getContextPath() + "/admin/exchangeRates");
+        response.sendRedirect(request.getContextPath() + "/admin/exchangeRates?role=admin");
     }
 
     private void addExchangeRate(HttpServletRequest request) {
