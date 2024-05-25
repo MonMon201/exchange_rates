@@ -3,6 +3,7 @@ package com.example.repository;
 import com.example.model.ExchangeRate;
 
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
 import javax.persistence.Persistence;
 import javax.persistence.TypedQuery;
 import java.util.List;
@@ -49,5 +50,17 @@ public class ExchangeRateRepository {
         TypedQuery<ExchangeRate> query = entityManager.createQuery("SELECT e FROM ExchangeRate e WHERE e.currency = :currency", ExchangeRate.class);
         query.setParameter("currency", currency);
         return query.getResultList();
+    }
+
+    public ExchangeRate findLatestByCurrency(String currency) {
+        TypedQuery<ExchangeRate> query = entityManager.createQuery(
+                "SELECT e FROM ExchangeRate e WHERE e.currency = :currency ORDER BY e.date DESC", ExchangeRate.class);
+        query.setParameter("currency", currency);
+        query.setMaxResults(1);
+        try {
+            return query.getSingleResult();
+        } catch (NoResultException e) {
+            return null;
+        }
     }
 }
