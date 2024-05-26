@@ -30,7 +30,6 @@ public class AdminExchangeRatesServlet extends HttpServlet {
         } else {
             exchangeRates = exchangeRateService.getAllExchangeRates();
         }
-        log.info("Exchange rates: {}", exchangeRates);
         request.setAttribute("exchangeRates", exchangeRates);
         request.setAttribute("role", "admin");
         request.getRequestDispatcher("/view/ExchangeRates.jsp").forward(request, response);

@@ -2,7 +2,7 @@ version: '3.1'
 
 services:
   web:
-    image: l2:latest
+    image: exchange_rate:latest
     ports:
       - "8080:8080"
     depends_on:
