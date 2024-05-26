@@ -48,7 +48,7 @@ This project is a web application built with Jakarta EE, utilizing servlets, JSP
 3. **Build the Docker image**
 
    ```sh
-   docker build -t exchange-rate-app .
+   docker build -t exchange_rate .
    ```
 
 4. **Start the Docker containers**
@@ -57,15 +57,7 @@ This project is a web application built with Jakarta EE, utilizing servlets, JSP
    docker-compose up -d
    ```
 
-5. **Seed the Database**
-
-   Run the following command to seed the database with initial data:
-
-   ```sh
-   docker exec -i <db-container-name> psql -U admin -d exchange_rates_db < seed.sql
-   ```
-
-6. **Access the Application**
+5. **Access the Application**
 
    Open your browser and navigate to `http://localhost:8080/app`.
 
